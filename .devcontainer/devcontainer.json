@@ -1,0 +1,45 @@
+{
+  "name": "Start9 App Builder",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/python:1": {},
+    "ghcr.io/devcontainers-contrib/features/apt-get-packages:1": {
+      "packages": "build-essential,openssl,libssl-dev,libc6-dev,clang,libclang-dev,ca-certificates,curl,cargo"
+    }
+  },
+
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "ms-python.python",
+        "mads-hartmann.bash-ide-vscode",
+        "timonwong.shellcheck",
+        "tamasfe.even-better-toml",
+        "github.vscode-github-actions",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "DavidAnson.vscode-markdownlint",
+        "wayou.vscode-todo-highlight"
+      ]
+    }
+  },
+
+  // Install stuff not packaged in Ubuntu
+  "onCreateCommand": {
+    "yq": "./.devcontainer/yq.sh",
+    "deno": "./.devcontainer/deno.sh"
+  },
+  "postCreateCommand": {
+    "start9": "./.devcontainer/start9.sh"
+  },
+
+  // Add start-sdk to the PATH
+  "containerEnv": {
+    "PATH": "$HOME/.cargo/bin:$PATH"
+  },
+
+  "remoteUser": "vscode"
+}
