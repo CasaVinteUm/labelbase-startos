@@ -36,6 +36,11 @@ RUN apt-get purge -y --auto-remove build-essential
 COPY ./Labelbase/nginx/nginx.conf /etc/nginx/
 COPY ./Labelbase/mysql/init.sql /docker-entrypoint-initdb.d/init.sql
 
+# Start MySQL
+# NOTE: Don't know why this is MariaDB (Oh yes python docker is based on Debian)
+RUN /etc/init.d/mariadb start
+
+# TODO: Debug remove it
 RUN sed -i 's/15/1/' run.sh
 
 # ARG ARCH
