@@ -2,7 +2,7 @@ id: labelbase
 title: "Labelbase"
 version: 1.0.0.1
 release-notes: "Revamped for EmbassyOS 0.3.5"
-license: mit
+license: MIT
 wrapper-repo: "https://github.com/Start9Labs/hello-world-wrapper"
 upstream-repo: "https://github.com/storopoli/labelbase-startos"
 support-site: "https://labelbase.space/knowledge-base/"
@@ -16,11 +16,10 @@ assets:
   license: LICENSE
   icon: icon.png
   instructions: instructions.md
-  # docker-images: image.tar
 main:
   type: docker
   image: main
-  entrypoint: "docker_entrypoint.sh"
+  entrypoint: "/app/run.sh"
   args: []
   mounts:
     main: /root
@@ -36,11 +35,11 @@ interfaces:
     description: A simple user interface that is expected to display the text "Hello Word"
     tor-config:
       port-mapping:
-        80: "80"
+        80: "8000"
     lan-config:
       443:
         ssl: true
-        internal: 80
+        internal: 8000
     ui: true
     protocols:
       - tcp
