@@ -4,7 +4,7 @@ ARG PLATFORM
 
 RUN microdnf install -y \
         make automake gcc gcc-c++ pkg-config \
-        mariadb105-devel \
+        mysql-devel \
         python3 python3-devel python3-pip \
         crontabs logrotate \
         nginx \
