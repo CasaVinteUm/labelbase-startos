@@ -19,7 +19,7 @@ assets:
 main:
   type: docker
   image: main
-  entrypoint: "/app/run.sh"
+  entrypoint: "docker_entrypoint.sh"
   args: []
   mounts:
     main: /root
