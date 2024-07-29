@@ -1,4 +1,4 @@
-FROM mysql:8.0-debian@sha256:1579fe3a97a436cc10824fc771a07fcedc92213e7ab7604eb5d2976ca419abc8
+FROM mysql:8
 
 ENV MYSQL_USER=ulabelbase
 ENV MYSQL_DATABASE=labelbase
@@ -6,19 +6,24 @@ ENV MYSQL_ROOT_PASSWORD=labelbase
 ENV MYSQL_PASSWORD=labelbase
 ENV MYSQL_PWD=labelbase
 
-RUN apt-get update && \
-    apt-get install -y \
-        default-libmysqlclient-dev \
-        build-essential pkg-config gcc \
-        cron vim logrotate \
-        libpcre3-dev \
-        python3-dev python3-pip \
-        #default-mysql-client \
-        nginx \
-    && rm -rf /var/lib/apt/lists/* 
-
-# Cleanup to reduce image size
-RUN apt-get purge -y --auto-remove build-essential
+RUN \
+    # Explicitly disable PHP to suppress conflicting requests error
+    microdnf -y module disable php \
+    && \
+    microdnf -y module enable nginx:1.22 && \
+    # Install stuff
+    microdnf -y install \
+	gcc \
+	mysql-devel \
+	pkg-config \
+	nginx \
+	python3.11 python3.11-pip python3.11-setuptools python3.11-wheel \
+    && \
+    rm -rf /var/cache/dnf \
+    && \
+    # forward request and error logs to container engine log collector
+    ln -sf /dev/stdout /var/log/nginx/access.log && \
+    ln -sf /dev/stderr /var/log/nginx/error.log
 
 # Copy configs/migrations
 COPY ./Labelbase/mysql/init.sql /docker-entrypoint-initdb.d/init.sql
@@ -37,8 +42,10 @@ WORKDIR /app
 COPY ./Labelbase/django /app/
 
 # Python deps
-RUN pip install --upgrade pip --break-system-packages
-RUN pip install --no-cache-dir --break-system-packages -r /app/requirements.txt
+RUN ln -sf /usr/bin/python3.11 /usr/bin/python
+RUN python -m pip install --upgrade pip
+RUN python -m pip install --no-cache-dir --break-system-packages -r /app/requirements.txt
 
 COPY ./run.sh /app/run.sh
 RUN chmod +x /app/run.sh
+
