@@ -1,3 +1,7 @@
+> [!WARNING]
+> This repository was archived in favor of
+> [`remcoros/labelbase-startos`](https://github.com/remcoros/labelbase-startos)
+
 <p align="center">
   <img src="icon.png" alt="Project Logo" width="21%">
 </p>
